@@ -80,7 +80,6 @@ const Cast = ({ movieId }: CastProps) => {
 				});
 
 				setCastList(NewCastList);
-				console.log(castList);
 			} catch (error) {
 				console.log(error);
 			}
@@ -95,11 +94,10 @@ const Cast = ({ movieId }: CastProps) => {
 			<div className='cast-container'>
 				{castList.map((actor) => (
 					<Link
+						key={actor.id}
 						className='actor-container'
 						to={`/actor/${actor.id}`}>
-						<div
-							key={actor.id}
-							className='actor'>
+						<div className='actor'>
 							<div className='profile-picture'>
 								{actor.profilePicture === null ? (
 									<div className='no-image'>

@@ -508,6 +508,65 @@ form button:hover {
 	color: rgba(87, 199, 133, 0.75);
 }
 
+.actor-page {
+	display: grid;
+	grid-template-columns: 300px 1fr;
+	max-width: 70%;
+	margin-inline: auto;
+	margin-top: 50px;
+	gap: 2rem;
+}
+
+.personal-info h3 {
+	font-size: 1.3rem;
+}
+
+.personal-info img {
+	border-radius: 8px;
+	margin-bottom: 1rem;
+}
+
+.personal-info p {
+	font-weight: bold;
+	margin-top: 0.5rem;
+	text-decoration: underline;
+}
+
+.biography {
+	margin-bottom: 1.5rem;
+}
+
+.main-actor-details h3 {
+	font-size: 1.3rem;
+	margin-bottom: 0.5rem;
+}
+
+.biography p {
+	white-space: pre-line;
+	position: relative;
+}
+
+.main-actor-details h1 {
+	margin-bottom: 1rem;
+}
+
+.read-more-btn {
+	display: inline-flex;
+	align-items: center;
+	z-index: 999;
+	position: absolute;
+	width: 100px;
+	right: 0px;
+	bottom: 2px;
+	justify-content: flex-end;
+	background: #16171d;
+	font-weight: bold;
+}
+
+.read-more-btn:hover {
+	color: lightgreen;
+}
+
 @media screen and (max-width: 900px) {
 	.logo {
 		display: none;
