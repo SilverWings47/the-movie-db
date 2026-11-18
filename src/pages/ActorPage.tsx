@@ -4,6 +4,7 @@ import { authKey } from '../utils/authKey';
 import { IoIosArrowForward } from 'react-icons/io';
 import { FadeLoader } from 'react-spinners';
 import { Link } from 'react-router';
+import { differenceInYears, format } from 'date-fns';
 
 interface PersonDetailsResponseType {
 	adult: boolean;
@@ -73,6 +74,7 @@ const ActorPage = () => {
 	const [actorInfo, setActorInfo] = useState<ActorInfo | null>(null);
 	const [actorBestMovies, setActorBestMovies] = useState<MovieCastCredit[]>([]);
 	const [isExpanded, setIsExpanded] = useState<boolean>(false);
+	const [numberOfMovies, setNumberOfMovies] = useState<number>(0);
 
 	useEffect(() => {
 		async function fetchActor() {
@@ -126,16 +128,23 @@ const ActorPage = () => {
 						Authorization: authKey,
 					},
 				};
-				const response = await fetch(
+				const responseMovies = await fetch(
 					`https://api.themoviedb.org/3/person/${actor_id}/movie_credits`,
 					options,
 				);
-				const data: PersonMovieCredits = await response.json();
-				const sortedByPopularity = data.cast.toSorted(
+				const dataMovies: PersonMovieCredits = await responseMovies.json();
+				const sortedByPopularity = dataMovies.cast.toSorted(
 					(a, b) => b.popularity - a.popularity,
 				);
-				console.log(sortedByPopularity);
+
+				const responseTV = await fetch(
+					`https://api.themoviedb.org/3/person/${actor_id}/tv_credits`,
+					options,
+				);
+				const dataTV: PersonMovieCredits = await responseTV.json();
+
 				setActorBestMovies(sortedByPopularity.slice(0, 10));
+				setNumberOfMovies(dataMovies.cast.length + dataTV.cast.length);
 			} catch (error) {
 				console.log(error);
 			}
@@ -144,6 +153,17 @@ const ActorPage = () => {
 		fetchActor();
 		fetchActorMovies();
 	}, []);
+
+	function formatDate(date: string | null | undefined): string {
+		if (!date) return 'N/A';
+		const formattedBirthdate: string =
+			format(new Date(date), 'MMMM dd, yyyy') + ' ';
+
+		const formattedAge: string =
+			differenceInYears(new Date(), new Date(date)) + ' years old';
+
+		return formattedBirthdate + ' ' + `(${formattedAge})`;
+	}
 
 	return isLoading ? (
 		<div className='movie-grid__nothing'>
@@ -162,11 +182,11 @@ const ActorPage = () => {
 					<p>Known For</p>
 					<span>{actorInfo?.known_for_department}</span>
 					<p>Known Credits</p>
-					<span>N/A</span>
+					<span>{numberOfMovies}</span>
 					<p>Gender</p>
 					<span>{actorInfo?.gender === 1 ? 'Female' : 'Male'}</span>
 					<p>Birthday</p>
-					<span>{actorInfo?.birthday}</span>
+					<span>{formatDate(actorInfo?.birthday)}</span>
 					<p>Place of Birth</p>
 					<span>{actorInfo?.place_of_birth}</span>
 					<p>Also Known as</p>
